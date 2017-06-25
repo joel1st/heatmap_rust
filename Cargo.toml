@@ -1,0 +1,7 @@
+[package]
+name = "heatmap"
+version = "0.1.0"
+authors = ["Joel <joel_1st@hotmail.com>"]
+
+[dependencies]
+image = "*"
