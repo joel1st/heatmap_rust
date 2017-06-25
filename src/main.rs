@@ -48,18 +48,18 @@ fn generate_png_from_occurances(occurances: Vec<Box<[u16; 36000]>>) {
     colors.insert(2, [200, 240, 100, 200]);
 
     let ref path = &Path::new("test.png");
-    let img = ImageBuffer::from_fn( 18000, 36000, |x, y| {
+    let img = ImageBuffer::from_fn( 36000, 16000, |x, y| {
+        let yelem = y;
         let xelem = x;
-	let yelem = y;
-        let val = occurances[xelem as usize][yelem as usize];
+        let val = occurances[yelem as usize][xelem as usize];
 
-	match colors.get(&val)  {
-		Some(rgba) => image::Rgba(rgba.clone()),
-		None => {
-			println!("no match!");
-			image::Rgba([0, 0, 0, 0])
-		}
-	}
+        match colors.get(&val)  {
+            Some(rgba) => image::Rgba(rgba.clone()),
+            None => {
+                println!("no match!");
+                image::Rgba([0, 0, 0, 0])
+            }
+        }
     });
     let _ = img.save(path).unwrap();
 }
