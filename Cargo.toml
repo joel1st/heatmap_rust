@@ -5,3 +5,5 @@ authors = ["Joel <joel_1st@hotmail.com>"]
 
 [dependencies]
 image = "*"
+mongodb = "*"
+bson = "*"

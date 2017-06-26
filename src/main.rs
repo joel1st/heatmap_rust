@@ -2,6 +2,12 @@ use std::collections::HashMap;
 extern crate image;
 use image::ImageBuffer;
 use std::path::Path;
+#[macro_use(bson, doc)]
+extern crate bson;
+extern crate mongodb;
+use bson::Bson;
+use mongodb::{Client, ThreadedClient};
+use mongodb::db::ThreadedDatabase;
 
 fn main() {
     println!("Hello, world!");
@@ -88,5 +94,31 @@ fn mutate_occurances_from_locations(locations: Vec<(u32, u32)>, occurances: &mut
 }
 
 fn get_locations() -> Vec<(u32, u32)> {
-	vec![ (200, 90), (2100, 180), (210, 500), (70, 80), (11, 8) ]
+    let client = Client::connect("localhost", 27017)
+    .expect("Failed to initialize standalone client.");
+
+    let coll = client.db("locations").collection("points");
+
+    // let doc = doc! { "title" => "Jaws", "array" => [ 1, 2, 3 ] };
+    let doc = doc! {};
+
+    // Find the document and receive a cursor
+    let mut cursor = coll.find(None, None)
+    .ok().expect("Failed to execute find.");
+
+    // let item = cursor.next();
+
+    // cursor.next() returns an Option<Result<Document>>
+    let mut denormalized_results = vec! [];
+    for result in cursor {
+        let val = match result {
+            Ok(doc) => match doc.get("point"){
+                Some(&Bson::Array(ref point)) => point.clone(),
+                _ => panic!("Expected point to be a string!"),
+            },
+            Err(_) => panic!("failed to get the things")
+        };
+        denormalized_results.push((val[0].as_f64().unwrap() as u32, val[1].as_f64().unwrap() as u32));
+    }
+    denormalized_results
 }
