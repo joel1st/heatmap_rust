@@ -8,23 +8,30 @@ extern crate mongodb;
 use bson::Bson;
 use mongodb::{Client, ThreadedClient};
 use mongodb::db::ThreadedDatabase;
+// Generate randomised data for (var i = 0; i < 2000; i++) { db.points.insert({point: [Math.floor(Math.random() * 10 * i), Math.floor(Math.random() * 10 * i )]}) }
 
 fn main() {
     println!("Hello, world!");
-
     let diameter: i32 = 51;
+    let radius: i32 = diameter / 2;
+    let imageWidth: u32 = 10000;
+    let imageHeight: u32 = 10000;
     let stamp = generate_circle_array(diameter);
 
-    let mut occurances : Vec<Box<[u16; 36000]>> = vec![];
-    for _ in 0..18000 {
-	    occurances.push(Box::new([0; 36000]))
+    let mut occurances : Vec<Vec<u16>> = vec![];
+    for _ in 0..imageHeight {
+        let mut temp_x_vec: Vec<u16> = vec![];
+        for _ in 0..imageWidth {
+            temp_x_vec.push(0);
+        }
+        occurances.push(temp_x_vec);
     }
 
     let locations: Vec<(u32, u32)> = get_locations();
-    mutate_occurances_from_locations(locations, &mut occurances, &stamp);
+    mutate_occurances_from_locations(locations, &mut occurances, &stamp, radius, imageHeight, imageWidth);
 
-   generate_png_from_occurances(occurances);
-   println!("hey there");
+    generate_png_from_occurances(occurances, imageHeight, imageWidth);
+    println!("hey there");
 }
 
 fn generate_circle_array(diamator: i32) -> Vec<Vec<u8>> {
@@ -47,41 +54,71 @@ fn generate_circle_array(diamator: i32) -> Vec<Vec<u8>> {
   stamp
 }
 
-fn generate_png_from_occurances(occurances: Vec<Box<[u16; 36000]>>) {
-    let mut colors = HashMap::new();
-    colors.insert(0, [0, 0, 0, 0]);
-    colors.insert(1, [90, 200, 80, 200]);
-    colors.insert(2, [200, 240, 100, 200]);
+struct Color {
+    min_occurances: u16,
+    rgba: [u8; 4]
+}
 
+fn generate_color_array() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 1,
+            rgba: [90, 200, 80, 200]
+        },
+        Color {
+            min_occurances: 2,
+            rgba: [200, 240, 100, 200]
+        }
+    ]
+}
+
+fn get_color_for_occurance(mut available_colors: &Vec<Color>, no_of_occurances: u16) -> [u8; 4] {
+    let length = available_colors.len();
+    for (index, color) in &mut available_colors.iter().enumerate() {
+        if color.min_occurances == no_of_occurances {
+            return color.rgba.clone();
+        }
+        if color.min_occurances > no_of_occurances {
+            return available_colors[index - 1].rgba.clone();
+        }
+    }
+    available_colors[length - 1].rgba.clone()
+}
+
+fn generate_png_from_occurances(occurances: Vec<Vec<u16>>, imageHeight: u32, imageWidth: u32) {
     let ref path = &Path::new("test.png");
-    let img = ImageBuffer::from_fn( 36000, 16000, |x, y| {
+    let mut available_colors = generate_color_array();
+    let img = ImageBuffer::from_fn( imageWidth, imageHeight, |x, y| {
         let yelem = y;
         let xelem = x;
         let val = occurances[yelem as usize][xelem as usize];
-
-        match colors.get(&val)  {
-            Some(rgba) => image::Rgba(rgba.clone()),
-            None => {
-                println!("no match!");
-                image::Rgba([0, 0, 0, 0])
-            }
-        }
+        image::Rgba(get_color_for_occurance(&available_colors, val))
     });
     let _ = img.save(path).unwrap();
 }
 
-fn mutate_occurances_from_locations(locations: Vec<(u32, u32)>, occurances: &mut Vec<Box<[u16; 36000]>>, stamp: &Vec<Vec<u8>>) {
-    let radius: i32 = 25;
+fn mutate_occurances_from_locations(
+    locations: Vec<(u32, u32)>,
+    occurances: &mut Vec<Vec<u16>>,
+    stamp: &Vec<Vec<u8>>,
+    radius: i32,
+    imageHeight: u32,
+    imageWidth: u32
+) {
     for (x, y) in locations.into_iter() {
         println!("{} {}", x, y);
         for (y_ind, y_val) in stamp.into_iter().enumerate() {
             let y_pos = y as i32 + ((y_ind as i32 + 1i32) - radius);
-            if y_pos < 0 || y_pos > 17999 {
+            if y_pos < 0 || y_pos > (imageHeight as i32 - 1) {
                 continue;
             }
             for (x_ind, x_val) in y_val.into_iter().enumerate() {
                 let x_pos: i32 = x as i32 + ((x_ind as i32 + 1i32) - radius);
-                if x_pos < 0 || x_pos > 35999 {
+                if x_pos < 0 || x_pos > (imageWidth as i32 - 1) {
                     continue;
                 }
                 let new_val: u16 = occurances[y_pos as usize][x_pos as usize] as u16 + *x_val as u16;
