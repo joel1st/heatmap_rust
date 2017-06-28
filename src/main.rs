@@ -7,11 +7,9 @@ use std::env;
 mod colors;
 mod get_locations;
 mod stamps;
+
 fn main() {
-    // for argument in env::args() {
-    //     println!("{}", argument);
-    // }
-    println!("Hello, world!");
+    println!("Starting heatmap generation process");
     let configuration = get_configuration();
     let ref path = &Path::new(&configuration.file_name);
     let stamp = stamps::circle(configuration.diameter);
@@ -32,6 +30,7 @@ fn main() {
     println!("Successfully generated PNG");
     println!("Finished!");
 }
+
 struct Configuration {
     diameter: i32,
     radius: i32,
@@ -39,11 +38,15 @@ struct Configuration {
     image_height: u32,
     file_name: String
 }
+
 fn get_configuration() -> Configuration {
+    // for argument in env::args() {
+    //     println!("{}", argument);
+    // }
     let diameter: i32 = 500;
     let radius: i32 = diameter / 2;
-    let image_width: u32 = 10000;
-    let image_height: u32 = 10000;
+    let image_width: u32 = 36000;
+    let image_height: u32 = 18000;
     Configuration {
         diameter: diameter,
         radius: radius,
@@ -63,31 +66,6 @@ fn initialize_frequency_location_matrix(image_height: u32, image_width: u32) -> 
         occurances.push(temp_x_vec);
     }
     occurances
-}
-
-
-fn get_color_for_occurance(mut available_colors: &Vec<colors::Color>, no_of_occurances: u16) -> [u8; 4] {
-    let length = available_colors.len();
-    for (index, color) in &mut available_colors.iter().enumerate() {
-        if color.min_occurances == no_of_occurances {
-            return color.rgba.clone();
-        }
-        if color.min_occurances > no_of_occurances {
-            return available_colors[index - 1].rgba.clone();
-        }
-    }
-    available_colors[length - 1].rgba.clone()
-}
-
-fn convert_frequency_location_matrix_to_rgba_vals(occurances: Vec<Vec<u16>>, image_height: u32, image_width: u32)-> image::ImageBuffer<image::Rgba<u8>, std::vec::Vec<u8>>{
-    let mut available_colors = colors::blue();
-    let img = ImageBuffer::from_fn( image_width, image_height, |x, y| {
-        let yelem = y;
-        let xelem = x;
-        let val = occurances[yelem as usize][xelem as usize];
-        image::Rgba(get_color_for_occurance(&available_colors, val))
-    });
-    img
 }
 
 fn mutate_matrix_from_locations(
@@ -114,5 +92,28 @@ fn mutate_matrix_from_locations(
             }
         }
     }
+}
 
+fn convert_frequency_location_matrix_to_rgba_vals(occurances: Vec<Vec<u16>>, image_height: u32, image_width: u32)-> image::ImageBuffer<image::Rgba<u8>, std::vec::Vec<u8>>{
+    let mut available_colors = colors::blue();
+    let img = ImageBuffer::from_fn( image_width, image_height, |x, y| {
+        let yelem = y;
+        let xelem = x;
+        let val = occurances[yelem as usize][xelem as usize];
+        image::Rgba(get_color_for_occurance(&available_colors, val))
+    });
+    img
+}
+
+fn get_color_for_occurance(mut available_colors: &Vec<colors::Color>, no_of_occurances: u16) -> [u8; 4] {
+    let length = available_colors.len();
+    for (index, color) in &mut available_colors.iter().enumerate() {
+        if color.min_occurances == no_of_occurances {
+            return color.rgba.clone();
+        }
+        if color.min_occurances > no_of_occurances {
+            return available_colors[index - 1].rgba.clone();
+        }
+    }
+    available_colors[length - 1].rgba.clone()
 }
