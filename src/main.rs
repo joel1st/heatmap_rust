@@ -12,17 +12,17 @@ fn main() {
     println!("Starting heatmap generation process");
     let configuration = get_configuration();
     let ref path = &Path::new(&configuration.file_name);
-    let stamp = stamps::circle(configuration.diameter);
+    let stamp = stamps::get_stamp(&configuration.stamp, configuration.diameter);
 
     println!("Retrieving list of location points");
-    let locations: Vec<(u32, u32)> = get_locations::mongo();
+    let locations: Vec<(u32, u32)> = get_locations::get_locations(&configuration.location_source);
 
     println!("Generating frequency location matrix");
     let mut occurances = initialize_frequency_location_matrix(configuration.image_height, configuration.image_width);
     mutate_matrix_from_locations(locations, &mut occurances, &stamp, configuration.radius, configuration.image_height, configuration.image_width);
 
     println!("Generating RGBA values from frequency location matrix");
-    let image = convert_frequency_location_matrix_to_rgba_vals(occurances, configuration.image_height, configuration.image_width);
+    let image = convert_frequency_location_matrix_to_rgba_vals(occurances, &configuration);
 
     println!("Saving PNG from RGBA values");
     image.save(path).unwrap();
@@ -36,7 +36,10 @@ struct Configuration {
     radius: i32,
     image_width: u32,
     image_height: u32,
-    file_name: String
+    file_name: String,
+    color: String,
+    stamp: String,
+    location_source: String
 }
 
 fn get_configuration() -> Configuration {
@@ -45,14 +48,17 @@ fn get_configuration() -> Configuration {
     // }
     let diameter: i32 = 500;
     let radius: i32 = diameter / 2;
-    let image_width: u32 = 36000;
-    let image_height: u32 = 18000;
+    let image_width: u32 = 10000;
+    let image_height: u32 = 10000;
     Configuration {
         diameter: diameter,
         radius: radius,
         image_width: image_width,
         image_height: image_height,
-        file_name: String::from("test.png")
+        file_name: String::from("test.png"),
+        color: String::from("blue"),
+        stamp: String::from("circle"),
+        location_source: String::from("mongo")
     }
 }
 
@@ -94,9 +100,9 @@ fn mutate_matrix_from_locations(
     }
 }
 
-fn convert_frequency_location_matrix_to_rgba_vals(occurances: Vec<Vec<u16>>, image_height: u32, image_width: u32)-> image::ImageBuffer<image::Rgba<u8>, std::vec::Vec<u8>>{
-    let mut available_colors = colors::blue();
-    let img = ImageBuffer::from_fn( image_width, image_height, |x, y| {
+fn convert_frequency_location_matrix_to_rgba_vals(occurances: Vec<Vec<u16>>, configuration: &Configuration)-> image::ImageBuffer<image::Rgba<u8>, std::vec::Vec<u8>>{
+    let available_colors = colors::get_color(&configuration.color);
+    let img = ImageBuffer::from_fn( configuration.image_width, configuration.image_height, |x, y| {
         let yelem = y;
         let xelem = x;
         let val = occurances[yelem as usize][xelem as usize];

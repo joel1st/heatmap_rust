@@ -2,10 +2,15 @@ use bson::Bson;
 use mongodb::{Client, ThreadedClient};
 use mongodb::db::ThreadedDatabase;
 
+pub fn get_locations(location_source: &String) -> Vec<(u32, u32)> {
+    match location_source.as_ref() {
+        "mongo" => mongo(),
+        _ => mongo()
+    }
+}
 // Generate randomised data for (var i = 0; i < 2000; i++) { db.points.insert({point: [Math.floor(Math.random() * 10 * i), Math.floor(Math.random() * 10 * i )]}) }
 pub fn mongo() -> Vec<(u32, u32)> {
-    let client = Client::connect("localhost", 27017)
-    .expect("Failed to initialize standalone client.");
+    let client = Client::connect("localhost", 27017).expect("Failed to initialize standalone client.");
 
     let coll = client.db("locations").collection("points");
 
