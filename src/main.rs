@@ -1,6 +1,8 @@
 extern crate image;
 extern crate bson;
 extern crate mongodb;
+#[macro_use]
+extern crate clap;
 use std::path::Path;
 mod get_locations;
 mod heatmap_logic;

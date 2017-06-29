@@ -57,7 +57,7 @@ pub fn convert_frequency_location_matrix_to_rgba_vals(occurances: Vec<Vec<u16>>,
     img
 }
 
-pub fn get_color_for_occurance(mut available_colors: &Vec<colors::Color>, no_of_occurances: u16) -> [u8; 4] {
+pub fn get_color_for_occurance(available_colors: &Vec<colors::Color>, no_of_occurances: u16) -> [u8; 4] {
     let length = available_colors.len();
     for (index, color) in &mut available_colors.iter().enumerate() {
         if color.min_occurances == no_of_occurances {
