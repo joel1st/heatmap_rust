@@ -48,7 +48,7 @@ pub fn get_configuration() -> Configuration {
           .help("stamp to use for the heat points"))
       .arg(Arg::with_name("location_source")
           .long("location_source")
-          .short("s")
+          .short("l")
           .takes_value(true)
           .help("source for retrieving the heatmap points"))
       .get_matches();
@@ -60,7 +60,7 @@ pub fn get_configuration() -> Configuration {
     let file_name: String = value_t!(matches.value_of("file_output"), String).unwrap_or_else(|_| String::from("test.png"));
     let color: String = value_t!(matches.value_of("color"), String).unwrap_or_else(|_| String::from("blue"));
     let stamp: String = value_t!(matches.value_of("stamp"), String).unwrap_or_else(|_| String::from("circle"));
-    let location_source: String = value_t!(matches.value_of("source"), String).unwrap_or_else(|_| String::from("mongo"));
+    let location_source: String = value_t!(matches.value_of("location_source"), String).unwrap_or_else(|_| String::from("mongo"));
 
     Configuration {
         diameter: diameter,
