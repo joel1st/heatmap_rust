@@ -13,6 +13,7 @@ pub fn get_locations(location_source: &String) -> Vec<(u32, u32)> {
 }
 
 pub fn read_file() -> Vec<(u32, u32)> {
+    println!("Reading from file.");
     let mut file = File::open("points.txt").unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
@@ -31,6 +32,7 @@ pub fn read_file() -> Vec<(u32, u32)> {
 
 // Generate randomised data for (var i = 0; i < 2000; i++) { db.points.insert({point: [Math.floor(Math.random() * 10 * i), Math.floor(Math.random() * 10 * i )]}) }
 pub fn mongo() -> Vec<(u32, u32)> {
+    println!("Reading from mongo.");
     let client = Client::connect("localhost", 27017).expect("Failed to initialize standalone client.");
 
     let coll = client.db("locations").collection("points");

@@ -15,6 +15,9 @@ pub fn get_color_scheme(configuration: &Configuration, max_frequency: u16) -> Ve
     let mut colour_scheme = match configuration.color.as_ref() {
         "blue" => blue(),
         "red" => red(),
+        "blues" => blues(),
+        "reds" => reds(),
+        "purples" => purples(),
         _ => red()
     };
     if configuration.automated {
@@ -101,3 +104,41 @@ pub fn red() -> Vec<Color> {
 
 // pub fn spectral() -> Vec<Color> {
 // }
+pub fn blues() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 3,
+            rgba: [106, 172, 212, 255]
+        }
+    ]
+}
+
+pub fn reds() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 3,
+            rgba: [128, 125, 186, 255]
+        }
+    ]
+}
+
+pub fn purples() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 3,
+            rgba: [251, 146, 114, 255]
+        }
+    ]
+}
