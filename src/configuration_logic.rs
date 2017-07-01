@@ -8,7 +8,8 @@ pub struct Configuration {
     pub file_name: String,
     pub color: String,
     pub stamp: String,
-    pub location_source: String
+    pub location_source: String,
+    pub automated: bool
 }
 
 pub fn get_configuration() -> Configuration {
@@ -36,6 +37,11 @@ pub fn get_configuration() -> Configuration {
           .short("o")
           .takes_value(true)
           .help("name of the file"))
+      .arg(Arg::with_name("automated")
+          .long("automated")
+          .short("a")
+          .takes_value(true)
+          .help("automatically choose threshold levels for each color"))
       .arg(Arg::with_name("color")
           .long("color")
           .short("c")
@@ -59,8 +65,9 @@ pub fn get_configuration() -> Configuration {
     let image_height: u32 = value_t!(matches.value_of("image_height"), u32).unwrap_or_else(|_| 2000);
     let file_name: String = value_t!(matches.value_of("file_output"), String).unwrap_or_else(|_| String::from("test.png"));
     let color: String = value_t!(matches.value_of("color"), String).unwrap_or_else(|_| String::from("blue"));
-    let stamp: String = value_t!(matches.value_of("stamp"), String).unwrap_or_else(|_| String::from("circle"));
+    let stamp: String = value_t!(matches.value_of("stamp"), String).unwrap_or_else(|_| String::from("circle_discrete"));
     let location_source: String = value_t!(matches.value_of("location_source"), String).unwrap_or_else(|_| String::from("mongo"));
+    let automated: bool = value_t!(matches.value_of("automated"), bool).unwrap_or_else(|_| false);
 
     Configuration {
         diameter: diameter,
@@ -70,6 +77,7 @@ pub fn get_configuration() -> Configuration {
         file_name: file_name,
         color: color,
         stamp: stamp,
-        location_source: location_source
+        location_source: location_source,
+        automated: automated,
     }
 }

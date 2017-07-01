@@ -17,7 +17,7 @@ pub fn get_color_scheme(configuration: &Configuration, max_frequency: u16) -> Ve
         "red" => red(),
         _ => red()
     };
-    if true {
+    if configuration.automated {
         let occurances = generate_min_occurances(colour_scheme.len() as u16, max_frequency);
         println!("{:?}", occurances);
         for (index, color) in colour_scheme.iter_mut().enumerate() {
@@ -36,6 +36,10 @@ pub fn generate_min_occurances (number_of_colors: u16, max_frequency: u16)-> Vec
     let movable_colors: u16 = number_of_colors - 1u16;
     let steps: u16 = max_frequency / movable_colors;
     for i in 1..movable_colors {
+        if i == movable_colors - 1 {
+            occurances_vec.push(max_frequency);
+            break;
+        }
         occurances_vec.push(steps * i);
     }
     occurances_vec
@@ -49,22 +53,30 @@ pub fn blue() -> Vec<Color> {
         },
         Color {
             min_occurances: 1,
+            rgba: [20, 90, 50, 200]
+        },
+        Color {
+            min_occurances: 2,
+            rgba: [80, 100, 70, 200]
+        },
+        Color {
+            min_occurances: 3,
             rgba: [90, 200, 80, 200]
         },
         Color {
-            min_occurances: 11,
+            min_occurances: 4,
             rgba: [220, 40, 70, 200]
         },
         Color {
-            min_occurances: 10,
+            min_occurances: 5,
             rgba: [200, 240, 100, 240]
         },
         Color {
-            min_occurances: 10,
+            min_occurances: 6,
             rgba: [250, 240, 190, 250]
         },
         Color {
-            min_occurances: 10,
+            min_occurances: 7,
             rgba: [255, 255, 255, 250]
         }
     ]
@@ -86,3 +98,6 @@ pub fn red() -> Vec<Color> {
         }
     ]
 }
+
+// pub fn spectral() -> Vec<Color> {
+// }
