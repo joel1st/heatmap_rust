@@ -21,10 +21,11 @@ fn main() {
 
     println!("Generating frequency location matrix");
     let mut occurances = heatmap_logic::initialize_frequency_location_matrix(configuration.image_height, configuration.image_width);
-    heatmap_logic::mutate_matrix_from_locations(locations, &mut occurances, &stamp, &configuration);
+    let max_frequency = heatmap_logic::mutate_matrix_from_locations(locations, &mut occurances, &stamp, &configuration);
 
     println!("Generating RGBA values from frequency location matrix");
-    let image = heatmap_logic::convert_frequency_location_matrix_to_rgba_vals(occurances, &configuration);
+    let color_scheme = colors::get_color_scheme(&configuration, max_frequency);
+    let image = heatmap_logic::convert_frequency_location_matrix_to_rgba_vals(occurances, &configuration, color_scheme);
 
     println!("Saving PNG from RGBA values");
     image.save(path).unwrap();

@@ -1,6 +1,6 @@
 use image;
 use image::ImageBuffer;
-use super::colors;
+use super::colors::Color;
 use super::configuration_logic::Configuration;
 
 pub fn initialize_frequency_location_matrix(image_height: u32, image_width: u32) -> Vec<Vec<u16>>{
@@ -20,7 +20,8 @@ pub fn mutate_matrix_from_locations(
     location_matrix: &mut Vec<Vec<u16>>,
     stamp: &Vec<Vec<u8>>,
     configuration: &Configuration,
-) {
+) -> u16 {
+    let mut max_frequency: u16 = 0;
     for (x, y) in locations.into_iter() {
         for (y_ind, y_val) in stamp.into_iter().enumerate() {
             let y_matrix_pos = matrix_position(y, y_ind, configuration.radius);
@@ -33,9 +34,14 @@ pub fn mutate_matrix_from_locations(
                     continue;
                 }
                 location_matrix[y_matrix_pos as usize][x_matrix_pos as usize] += *x_val as u16;
+                let frequency: u16 = location_matrix[y_matrix_pos as usize][x_matrix_pos as usize];
+                if frequency > max_frequency {
+                    max_frequency = frequency;
+                }
             }
         }
     }
+    max_frequency
 }
 
 fn matrix_position(location_position: u32, stamp_index: usize, radius: i32) -> i32 {
@@ -46,18 +52,17 @@ fn out_of_matrix_bounds(position: i32, max_dimension: u32) -> bool {
     position < 0 || position > (max_dimension as i32 - 1)
 }
 
-pub fn convert_frequency_location_matrix_to_rgba_vals(occurances: Vec<Vec<u16>>, configuration: &Configuration)-> image::ImageBuffer<image::Rgba<u8>, Vec<u8>>{
-    let available_colors = colors::get_color(&configuration.color);
+pub fn convert_frequency_location_matrix_to_rgba_vals(occurances: Vec<Vec<u16>>, configuration: &Configuration, color_scheme: Vec<Color>)-> image::ImageBuffer<image::Rgba<u8>, Vec<u8>>{
     let img = ImageBuffer::from_fn( configuration.image_width, configuration.image_height, |x, y| {
         let yelem = y;
         let xelem = x;
         let val = occurances[yelem as usize][xelem as usize];
-        image::Rgba(get_color_for_occurance(&available_colors, val))
+        image::Rgba(get_color_for_occurance(&color_scheme, val))
     });
     img
 }
 
-pub fn get_color_for_occurance(available_colors: &Vec<colors::Color>, no_of_occurances: u16) -> [u8; 4] {
+pub fn get_color_for_occurance(available_colors: &Vec<Color>, no_of_occurances: u16) -> [u8; 4] {
     let length = available_colors.len();
     for (index, color) in &mut available_colors.iter().enumerate() {
         if color.min_occurances == no_of_occurances {
