@@ -1,13 +1,13 @@
 #! /bin/bash
 NUMBER_OF_POINTS=10000 node generate_points.js > points.txt
 
-./target/release/heatmap --image_width=36000 --image_height=18000 --diameter=50 --color=blue --location_source=file --file_output=intense_large.png
+./target/release/heatmap --image_width=36000 --image_height=18000 --diameter=100 --color=blues --location_source=file --file_output=intense_large.png
 echo "1 done"
 
-./target/release/heatmap --image_width=36000 --image_height=18000 --diameter=100 --color=red --location_source=file --file_output=medium_intensity.png
+./target/release/heatmap --image_width=36000 --image_height=18000 --diameter=200 --color=reds --location_source=file --file_output=medium_intensity.png
 echo "1 done"
 
-./target/release/heatmap --image_width=36000 --image_height=18000 --diameter=200 --color=purple --location_source=file --file_output=average_intensity.png
+./target/release/heatmap --image_width=36000 --image_height=18000 --diameter=400 --color=purples --location_source=file --file_output=average_intensity.png
 echo "3 done"
 
 gm convert intense_large.png -blur 20x9 -segment 0.000001 -transparent black output_large.png
