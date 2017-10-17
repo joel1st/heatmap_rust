@@ -66,7 +66,7 @@ pub fn get_configuration() -> Configuration {
     let file_name: String = value_t!(matches.value_of("file_output"), String).unwrap_or_else(|_| String::from("test.png"));
     let color: String = value_t!(matches.value_of("color"), String).unwrap_or_else(|_| String::from("blue"));
     let stamp: String = value_t!(matches.value_of("stamp"), String).unwrap_or_else(|_| String::from("circle_discrete"));
-    let location_source: String = value_t!(matches.value_of("location_source"), String).unwrap_or_else(|_| String::from("mongo"));
+    let location_source: String = value_t!(matches.value_of("location_source"), String).unwrap_or_else(|_| String::from("file"));
     let automated: bool = value_t!(matches.value_of("automated"), bool).unwrap_or_else(|_| false);
 
     Configuration {

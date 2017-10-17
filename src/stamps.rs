@@ -11,7 +11,6 @@ pub fn get_stamp(stamp: &String, diameter: i32) -> Vec<Vec<u8>> {
 pub fn circle_discrete(diamator: i32) -> Vec<Vec<u8>> {
   let center: i32 = diamator / 2;
   let radius2: i32 = center.pow(2);
-  println!("here");
 
   let mut stamp = vec![];
   for y in 0..diamator {

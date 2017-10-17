@@ -8,7 +8,7 @@ pub fn get_locations(location_source: &String) -> Vec<(u32, u32)> {
     match location_source.as_ref() {
         "mongo" => mongo(),
         "file" => read_file(),
-        _ => mongo()
+        _ => read_file()
     }
 }
 
