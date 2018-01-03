@@ -15,6 +15,24 @@ pub fn get_color_scheme(configuration: &Configuration, max_frequency: u16) -> Ve
     let mut colour_scheme = match configuration.color.as_ref() {
         "blue" => blue(),
         "red" => red(),
+        "blues" => blues(),
+        "blues1" => blues1(),
+        "blues2" => blues2(),
+        "blues3" => blues3(),
+        "blues4" => blues4(),
+        "blues5" => blues5(),
+        "blues6" => blues6(),
+        "blues7" => blues7(),
+        "blues8" => blues8(),
+        "blues9" => blues9(),
+        "blues10" => blues10(),
+        "blues11" => blues11(),
+        "blues12" => blues12(),
+        "blues13" => blues13(),
+        "blues14" => blues14(),
+        "blues15" => blues15(),
+        "reds" => reds(),
+        "purples" => purples(),
         _ => red()
     };
     if configuration.automated {
@@ -101,3 +119,238 @@ pub fn red() -> Vec<Color> {
 
 // pub fn spectral() -> Vec<Color> {
 // }
+pub fn blues() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 3,
+            rgba: [106, 172, 212, 255]
+        }
+    ]
+}
+
+pub fn reds() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 3,
+            rgba: [128, 125, 186, 255]
+        }
+    ]
+}
+
+pub fn purples() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 3,
+            rgba: [251, 146, 114, 255]
+        }
+    ]
+}
+
+
+
+pub fn blues1() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 250,
+            rgba: [255, 0, 0, 255]
+        }
+    ]
+}
+
+pub fn blues2() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 100,
+            rgba: [255, 0, 170, 255]
+        }
+    ]
+}
+
+pub fn blues3() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [170, 0, 255, 255]
+        }
+    ]
+}
+
+pub fn blues4() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [0, 0, 255, 255]
+        }
+    ]
+}
+
+pub fn blues5() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [0, 170, 255, 255]
+        }
+    ]
+}
+
+pub fn blues6() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [0, 255, 170, 0]
+        }
+    ]
+}
+
+pub fn blues7() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [0, 255, 0, 255]
+        }
+    ]
+}
+
+pub fn blues8() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [177, 255, 0, 255]
+        }
+    ]
+}
+
+pub fn blues9() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [255, 170, 0, 255]
+        }
+    ]
+}
+
+pub fn blues10() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [210, 177, 42, 255]
+        }
+    ]
+}
+
+pub fn blues11() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [156, 137, 60, 255]
+        }
+    ]
+}
+
+pub fn blues12() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [137, 126, 83, 255]
+        }
+    ]
+}
+
+pub fn blues13() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [111, 101, 60, 255]
+        }
+    ]
+}
+
+pub fn blues14() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [63, 58, 39, 255]
+        }
+    ]
+}
+
+pub fn blues15() -> Vec<Color> {
+    vec! [
+        Color {
+            min_occurances: 0,
+            rgba: [0, 0, 0, 0]
+        },
+        Color {
+            min_occurances: 40,
+            rgba: [27, 26, 23, 255]
+        }
+    ]
+}
